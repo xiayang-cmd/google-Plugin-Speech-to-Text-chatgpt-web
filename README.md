@@ -25,4 +25,5 @@ python my_flask_app.py
 - 请稍等约10秒（根据网络延迟情况而定），文本输入框内将显示语音转换后的内容。
 
 ## 效果:
-（此处可以描述插件效果或附加效果截图）
+![image](https://github.com/xiayang-cmd/google-Plugin-Speech-to-Text-chatgpt-web/assets/62921464/c7786d4b-64df-4d8f-8b4c-5cab7c81f38f)
+
