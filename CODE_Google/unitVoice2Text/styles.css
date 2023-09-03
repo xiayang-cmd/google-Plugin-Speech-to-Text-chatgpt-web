@@ -1,0 +1,24 @@
+#extension-insert-button {
+    /* margin-right: 10px; 调整间距确保看起来合适 */
+}
+.custom-button {
+    width: 25px; /* 按钮宽度 */
+    height: 25px; /* 按钮高度 */
+    position: absolute; /* 绝对定位，使得按钮可以相对于其最近的定位父元素定位 */
+    right: -30px; /* 将按钮向左移动100像素 */
+    background-color: rgb(171, 104, 255); /* 按钮的背景颜色 */
+    border: none; /* 去除边框 */
+    border-radius: 8px; /* 圆角 */
+    color: white; /* 字体颜色 */
+    cursor: pointer; /* 鼠标悬停时的光标样式 */
+    transition: background-color 0.3s; /* 背景色过渡效果 */
+}
+
+.custom-button:hover {
+    background-color: rgb(191, 124, 275); /* 鼠标悬停时的背景颜色 */
+}
+
+.custom-button:disabled {
+    opacity: 0.4; /* 按钮被禁用时的透明度 */
+    cursor: not-allowed; /* 按钮被禁用时的光标样式 */
+}

@@ -1,0 +1,21 @@
+{
+    "manifest_version": 3,
+    "name": "语音转文字",
+    "version": "1.0",
+    "description": "在网页上加一个按钮，按下这个按钮，这段固定的文本就会编辑进输入框内",
+    "permissions": ["activeTab", "scripting"],
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": {
+        "16": "icon.png"
+      }
+    },
+    "content_scripts": [
+        {
+          "matches": ["<all_urls>"], 
+          "js": ["content.js"],
+          "css": ["styles.css"]
+        }
+      ]
+  }
+  
