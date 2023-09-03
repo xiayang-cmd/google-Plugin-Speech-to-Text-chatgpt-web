@@ -27,7 +27,6 @@ python my_flask_app.py
 ## 效果:
 ![image](https://github.com/xiayang-cmd/google-Plugin-Speech-to-Text-chatgpt-web/assets/62921464/c7786d4b-64df-4d8f-8b4c-5cab7c81f38f)
 ![image](https://github.com/xiayang-cmd/google-Plugin-Speech-to-Text-chatgpt-web/assets/62921464/256f2c93-7a80-4486-ab4d-a6a591dc9d09)
+![image](https://github.com/xiayang-cmd/google-Plugin-Speech-to-Text-chatgpt-web/assets/62921464/9de3b550-e748-4b35-a722-e3a2128afff9)
 
-
-![image](https://github.com/xiayang-cmd/google-Plugin-Speech-to-Text-chatgpt-web/assets/62921464/674450d0-2316-4194-9e7d-118a583cde13)
 
