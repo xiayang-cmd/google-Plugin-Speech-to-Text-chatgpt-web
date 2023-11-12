@@ -17,6 +17,14 @@
 //         originalButton.parentElement.insertBefore(button, originalButton);
 //     }
 // }
+
+// 定义一个函数，更新按钮位置
+function updateButtonPosition(button, originalButton) {
+    let rect = originalButton.getBoundingClientRect();
+    button.style.top = `${rect.top + window.scrollY}px`; // 添加滚动偏移
+    button.style.left = `${rect.left + rect.width + 15 + window.scrollX}px`; // 添加滚动偏移
+}
+
 // 定义一个函数，尝试插入按钮
 function tryInsertButton() {
     let originalButton = document.querySelector('[data-testid="send-button"]');
@@ -25,8 +33,19 @@ function tryInsertButton() {
         button.className = "custom-button";
         button.innerText = "说";
         button.id = "extension-insert-button";
-        button.style.position = 'absolute';
-        button.style.right = 'calc(' + originalButton.style.right + ' + 1000px)'; // 调整位置
+
+        // 设置按钮位置
+        button.style.position = 'fixed'; // 使用 fixed 定位可以相对于视窗定位按钮
+        button.style.zIndex = '1000'; // 设置一个高的 z-index 以确保按钮在顶部
+        updateButtonPosition(button, originalButton);
+        // // 使用 originalButton 的位置信息来确定新按钮的位置
+        // let rect = originalButton.getBoundingClientRect();
+        // button.style.top = rect.top + 'px'; // 设置按钮在视窗中的垂直位置
+        // button.style.left = rect.left + rect.width + 'px'; // 设置按钮在视窗中的水平位置
+
+        // button.style.position = 'absolute';
+        // button.style.zIndex = '10'; // 确保按钮在其他元素之上
+        // button.style.right = 'calc(' + originalButton.style.right + ' + 1px)'; // 调整位置
         button.onclick = function() {
             if (button.innerText === "说") {
                 fetch("http://localhost:5000/start")
@@ -54,7 +73,17 @@ function tryInsertButton() {
                 .catch(error => console.error("Error:", error));
             }
         };
-        originalButton.parentElement.insertBefore(button, originalButton);
+
+        document.body.appendChild(button);
+        // originalButton.parentElement.insertBefore(button, originalButton); % 会超出父组件导致不可见
+
+        // 滚动到新按钮的位置以验证它是否在视窗内
+        // button.scrollIntoView();// 不再需要滚动到新按钮的位置，因为它将是固定在视窗中
+
+        // 监听窗口缩放事件
+        window.addEventListener('resize', function() {
+            updateButtonPosition(button, originalButton);
+        });
     }
 }
 
@@ -66,5 +95,3 @@ tryInsertButton();
 let observer = new MutationObserver(function(mutations) {
     tryInsertButton();
 });
-
-observer.observe(document.body, { childList: true, subtree: true });
