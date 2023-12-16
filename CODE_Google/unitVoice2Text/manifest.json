@@ -4,6 +4,9 @@
     "version": "1.0",
     "description": "语音转文字的扩展",
     "permissions": ["activeTab", "scripting"],
+    "background": {
+      "service_worker": "background.js"
+    },
     "action": {
       "default_popup": "popup.html",
       "default_icon": {
