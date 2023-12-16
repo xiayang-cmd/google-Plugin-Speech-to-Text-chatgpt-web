@@ -2,16 +2,38 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Insert Text</title>
+    <title>Voices2Text</title>
     <style>
         /* 样式可以根据需要进行修改 */
         body {
-            width: 200px;
+            width: 120px;       /* 调整宽度以适应内容 */
+            height: 25px;      /* 调整高度以适应内容 */
+            margin: 0 auto;     /* 居中页面 */
+            font-family: Arial, sans-serif; /* 设置字体 */
+            padding: 10px;      /* 添加一些内边距 */
+            text-align: center; /* 文本居中 */
+        }
+
+        #runButton {
+            display: block;       /* 使按钮成为块级元素 */
+            margin: 0 auto;       /* 上下边距为0，左右自动，使按钮水平居中 */
+            padding: 5px 10px;   /* 增加内边距，使按钮更大，更容易点击 */
+            border-radius: 5px;   /* 给按钮边缘添加圆角 */
+            background-color: #4CAF50; /* 按钮的背景颜色，这里是绿色 */
+            color: white;         /* 按钮文字颜色，这里是白色 */
+            border: none;         /* 去除边框 */
+            cursor: pointer;      /* 鼠标悬停时显示手指图标 */
+            font-size: 12px;      /* 设置字体大小 */
+            transition: all 0.3s; /* 添加过渡效果，使颜色变化更平滑 */
+        }
+
+        #runButton:hover {
+            background-color: #45a049; /* 鼠标悬停时按钮的背景颜色，略微变暗 */
         }
     </style>
 </head>
 <body>
-    <button id="insertButton">插入文本</button>
+    <button id="runButton">启动语音转写</button>
     <script src="popup.js"></script>
 </body>
 </html>
