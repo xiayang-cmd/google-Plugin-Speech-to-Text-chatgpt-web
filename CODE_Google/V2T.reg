@@ -1,0 +1,15 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\myvoice2textapp]
+@="URL:myVoice2Textapp Protocol"
+"URL Protocol"=""
+
+[HKEY_CLASSES_ROOT\myvoice2textapp\DefaultIcon]
+@="D:\\Program Files\\myVoice2Textapp\\my_flask_app.exe,1"
+
+[HKEY_CLASSES_ROOT\myvoice2textapp\shell]
+
+[HKEY_CLASSES_ROOT\myvoice2textapp\shell\open]
+
+[HKEY_CLASSES_ROOT\myvoice2textapp\shell\open\command]
+@="\"D:\\Program Files\\myVoice2Textapp\\my_flask_app.exe\" \"%1\""
