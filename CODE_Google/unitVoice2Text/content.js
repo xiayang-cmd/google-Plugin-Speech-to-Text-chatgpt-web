@@ -1,23 +1,3 @@
-// // 定义一个函数，尝试插入按钮
-// function tryInsertButton() {
-//     let originalButton = document.querySelector('[data-testid="send-button"]');
-//     if (originalButton && !document.getElementById('extension-insert-button')) {
-//         let button = document.createElement('button');
-//         button.className = "custom-button";
-//         button.innerText = "说";
-//         button.id = "extension-insert-button";
-//         button.style.position = 'absolute';
-//         button.style.right = 'calc(' + originalButton.style.right + ' + 1000px)'; // 调整位置
-//         button.onclick = function() {
-//             let textarea = document.querySelector('#prompt-textarea');
-//             if (textarea) {
-//                 textarea.value = '这是我要插入的固定文本';
-//             }
-//         };
-//         originalButton.parentElement.insertBefore(button, originalButton);
-//     }
-// }
-
 // 定义一个函数，更新按钮位置
 function updateButtonPosition(button, originalButton) {
     let rect = originalButton.getBoundingClientRect();
@@ -82,6 +62,7 @@ function tryInsertButton() {
 
         // 监听窗口缩放事件
         window.addEventListener('resize', function() {
+            let originalButton = document.querySelector('[data-testid="send-button"]');
             updateButtonPosition(button, originalButton);
         });
     }
