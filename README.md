@@ -36,5 +36,12 @@ python my_flask_app.py
 - 安装Chrome插件
 - 点击插件图标，点击按钮启动语音转写，会自动打开服务器
 - 之后的步骤和4一样
+
+## 注意：my_flask_app.exe文件生成：
+'''
+pyinstaller --onefile my_flask_app.py
+'''
+
+## 效果:
 ![image](https://github.com/xiayang-cmd/google-Plugin-Speech-to-Text-chatgpt-web/assets/62921464/fb0d051e-e84e-4918-892b-1c829a65e9ef)
 
