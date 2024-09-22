@@ -7,10 +7,29 @@ import wave
 import os
 import openai
 import json
+import subprocess
+
+# 函数：将 WAV 格式的音频文件转换为 M4A 格式
+def convert_wav_to_m4a(wav_path, m4a_path):
+    command = [
+    'ffmpeg',          # 调用 ffmpeg 程序
+    '-y',              # 自动覆盖输出文件
+    '-i', wav_path,    # 指定输入文件，这里是 WAV 文件的路径
+    '-acodec', 'aac',  # 设置音频编码器为 AAC，用于生成 M4A 文件
+    m4a_path           # 指定输出文件路径
+    ]
+
+    # 执行前面构建的 ffmpeg 命令
+    try:
+        subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True) # 抑制命令行的输出
+        print("转换成功")
+    except subprocess.CalledProcessError as e:
+        print("转换失败: ", e)
+    except Exception as e:
+        print("发生错误: ", e)
 
 
-
-# 函数：读取文件的文本内容
+# 定义一个函数来读取文件内容
 def read_from_file(filename):
     with open(filename, 'r', encoding='utf-8') as file:
         content = file.read()
@@ -33,9 +52,10 @@ RATE = 44100                # 采样率
 CHUNK = 1024                # 采样点数
 OUTPUT_FILENAME = "output.wav" # 输出文件名
 
+# 函数录制音频
 def record_audio():
     global is_recording, frames, stream, audio
-    # audio = pyaudio.PyAudio() # 创建 PyAudio 对象，用于录音
+    audio = pyaudio.PyAudio() # 创建 PyAudio 对象，用于录音
     stream = audio.open(format=FORMAT, channels=CHANNELS,
                         rate=RATE, input=True,
                         frames_per_buffer=CHUNK) # 打开流，传入响应参数
@@ -73,6 +93,8 @@ def stop_recording():
             wf.writeframes(b''.join(frames))                # 将 frames 写入文件
 
         print(f"File saved as {os.path.abspath(OUTPUT_FILENAME)}")
+        convert_wav_to_m4a('output.wav', 'output.m4a') # 转换成m4a音频格式
+        print("转换成功")
 
         frames = []  # 清空frames在这里，确保保存完音频后再清空
         stream = None
@@ -80,15 +102,15 @@ def stop_recording():
         # 使用 OpenAI API 进行语音识别
         api_key_content = read_from_file('api_key.txt')
         openai.api_key = api_key_content
-        audio_file = open("output.wav", "rb")
+        audio_file = open("output.m4a", "rb")
         transcript = openai.Audio.transcribe("whisper-1", audio_file)
         print(transcript.text)
 
-        # 读取JSON文件识别结果
+        # 读取JSON配置文件
         with open('config.json', 'r', encoding='utf-8') as file:
             config = json.load(file)
 
-        # 读取后处理的JSON配置文件
+        # 使用JSON文件中的变量
         system_message = config["system_message"]
         user_message = config["user_message"]
         model_name = config["model_name"]
@@ -104,7 +126,7 @@ def stop_recording():
                                                 messages=messages,
                                                 max_tokens=max_taken_value,)
 
-       # 输出结果
+        # 输出结果
         token_count = response["usage"]["total_tokens"]                 # 花费的令牌数
         response_content = response['choices'][0]['message']['content'] # 响应内容
         print("Token count: " + str(token_count))
