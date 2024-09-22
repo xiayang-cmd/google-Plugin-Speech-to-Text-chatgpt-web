@@ -5,9 +5,42 @@ import threading
 import pyaudio
 import wave
 import os
-import openai
+import sys
 import json
 import subprocess
+from openai import OpenAI
+
+
+#===================切换工作目录至exe所在文件夹================
+# 放置系统将工作目录设置为C:\Windows\system32，出现找不到配置数据文件的现象
+
+# 获取当前可执行文件所在的目录
+if getattr(sys, 'frozen', False):  # 如果是打包成 .exe 的情况
+    app_dir = os.path.dirname(sys.executable)  # .exe 文件的路径
+else:
+    app_dir = os.path.dirname(os.path.abspath(__file__))  # 直接运行 .py 文件的路径
+
+# 切换工作目录到应用程序所在的目录
+os.chdir(app_dir)
+
+# 打印当前工作目录以确认
+print(f"Working directory changed to: {os.getcwd()}")
+
+#================以下为OPENAI应用的公共部分====================
+
+# 函数：读取文件的文本内容
+def read_from_file(filename):
+    with open(filename, 'r', encoding='utf-8') as file:
+        content = file.read()
+    return content
+
+# 从文件中加载API密钥
+api_key_content = read_from_file('api_key.txt')
+
+# 创建 OpenAI 客户端
+client = OpenAI(api_key=api_key_content)
+
+#================以上为OPENAI应用的公共部分====================
 
 # 函数：将 WAV 格式的音频文件转换为 M4A 格式
 def convert_wav_to_m4a(wav_path, m4a_path):
@@ -29,13 +62,6 @@ def convert_wav_to_m4a(wav_path, m4a_path):
         print("发生错误: ", e)
 
 
-# 定义一个函数来读取文件内容
-def read_from_file(filename):
-    with open(filename, 'r', encoding='utf-8') as file:
-        content = file.read()
-    return content
-
-
 # 使用 Python 的 Flask 框架来创建一个 Web 应用
 app = Flask(__name__)
 CORS(app) # 跨源资源共享（CORS）支持
@@ -55,7 +81,7 @@ OUTPUT_FILENAME = "output.wav" # 输出文件名
 # 函数录制音频
 def record_audio():
     global is_recording, frames, stream, audio
-    audio = pyaudio.PyAudio() # 创建 PyAudio 对象，用于录音
+    audio = pyaudio.PyAudio() # 创建 PyAudio 对象，用于录音，别删，会报错。
     stream = audio.open(format=FORMAT, channels=CHANNELS,
                         rate=RATE, input=True,
                         frames_per_buffer=CHUNK) # 打开流，传入响应参数
@@ -100,10 +126,10 @@ def stop_recording():
         stream = None
         
         # 使用 OpenAI API 进行语音识别
-        api_key_content = read_from_file('api_key.txt')
-        openai.api_key = api_key_content
-        audio_file = open("output.m4a", "rb")
-        transcript = openai.Audio.transcribe("whisper-1", audio_file)
+        audio_file = open("output.wav", "rb")
+        transcript = client.audio.transcriptions.create(
+        model="whisper-1",
+        file=audio_file)
         print(transcript.text)
 
         # 读取JSON配置文件
@@ -120,15 +146,16 @@ def stop_recording():
         messages = [
             {"role": "system", "content": system_message},
             {"role": "user", "content": user_message+transcript.text},
-
         ]
-        response = openai.ChatCompletion.create(model=model_name,
-                                                messages=messages,
-                                                max_tokens=max_taken_value,)
+        response = client.chat.completions.create(
+            model=model_name,
+            messages=messages,
+            max_tokens=max_taken_value,
+        )
 
         # 输出结果
-        token_count = response["usage"]["total_tokens"]                 # 花费的令牌数
-        response_content = response['choices'][0]['message']['content'] # 响应内容
+        token_count = response.usage.total_tokens                   # 花费的令牌数
+        response_content = response.choices[0].message.content      # 响应内容
         print("Token count: " + str(token_count))
         print(response_content)
 
